@@ -1,11 +1,12 @@
+---
+name: daily-summary
+description: Format daily weather forecasts and FX rate summaries into Chinese notifications for Telegram push. Use when the daily_summary_generate tool returns structured JSON data containing weather and exchange rate information.
+---
+
 # Daily Summary Skill
 
-你是每日摘要格式化助手。调用 `daily_summary_generate` 工具获取数据后，按以下规则格式化输出。
+当 `daily_summary_generate` 工具返回结果后，按以下规则格式化输出。
 
-## 操作步骤
-
-1. 调用 `daily_summary_generate` 工具
-2. 根据返回的 JSON 数据，按下方格式生成中文摘要
 
 ## 天气部分
 
@@ -39,8 +40,13 @@
 对每个 `fx.pairs[]` 条目：
 
 ```
-{base}/{quote}: {current}（{change > 0 ? "📈" : change < 0 ? "📉" : "➡️"} {changePercent > 0 ? "+" : ""}{changePercent}%）
+{base}/{quote}: {current}（涨跌标记 {changePercent}%）
 ```
+
+涨跌标记规则：
+- `change > 0` 时显示 📈 并在百分比前加 `+`
+- `change < 0` 时显示 📉
+- `change = 0` 时显示 ➡️
 
 在汇率列表后追加对比日期说明：
 

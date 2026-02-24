@@ -61,7 +61,7 @@ openclaw cron add \
   --name "daily-summary" \
   --cron "0 8 * * *" \
   --session isolated \
-  --skill ./skills/daily-summary.md \
+  --skill ./skills/daily-summary/SKILL.md \
   --message "调用 daily_summary_generate 获取今日天气和汇率数据，按 skill 要求格式化输出。" \
   --announce \
   --channel telegram \
@@ -72,7 +72,7 @@ openclaw cron add \
 |------|------|------|
 | `--cron` | `"0 8 * * *"` | 每天早上 8 点执行（服务器时区） |
 | `--session` | `isolated` | 每次执行使用独立会话 |
-| `--skill` | `./skills/daily-summary.md` | AI 格式化指令 |
+| `--skill` | `./skills/daily-summary/SKILL.md` | AI 格式化指令 |
 | `--announce` | - | 将结果发送到通知渠道 |
 | `--to` | `"telegram:<chat_id>"` | 替换为你的 Telegram Chat ID |
 
@@ -92,7 +92,7 @@ openclaw cron add \
 
 ```bash
 openclaw run \
-  --skill ./skills/daily-summary.md \
+  --skill ./skills/daily-summary/SKILL.md \
   --message "调用 daily_summary_generate 获取今日天气和汇率数据，按 skill 要求格式化输出。"
 ```
 
@@ -118,7 +118,8 @@ daily-summary/
     weather-api.ts      — Open-Meteo 客户端（geocoding + 3 天预报）
     fx-api.ts           — Frankfurter 客户端（时间序列 + 交易日对比）
   skills/
-    daily-summary.md    — AI 格式化 Skill（cron 触发时使用）
+    daily-summary/
+      SKILL.md          — AI 格式化 Skill（cron 触发时使用）
   openclaw.plugin.json  — 插件清单 + 配置 Schema
   package.json
   tsconfig.json
