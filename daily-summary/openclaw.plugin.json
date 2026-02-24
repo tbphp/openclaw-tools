@@ -59,6 +59,7 @@
         "type": "string",
         "description": "Frankfurter API base URL (default: https://api.frankfurter.app)",
         "default": "https://api.frankfurter.app"
+      }
     }
   },
   "uiHints": {
