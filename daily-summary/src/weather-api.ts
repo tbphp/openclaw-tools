@@ -70,6 +70,7 @@ async function geocode(city: string): Promise<GeocodingResult> {
 }
 
 type ForecastResponse = {
+  timezone: string;
   daily: {
     time: string[];
     temperature_2m_max: number[];
@@ -118,6 +119,7 @@ export async function fetchLocationWeather(loc: WeatherLocationConfig): Promise<
   }
 
   const forecast = await fetchForecast(lat, lon);
+  if (!timezone) timezone = forecast.timezone;
   return {
     name,
     country,
