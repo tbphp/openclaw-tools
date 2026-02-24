@@ -1,83 +1,103 @@
-# OpenClaw Surge Extension (openclaw-surge)
+# OpenClaw Surge Plugin
 
-This is an [OpenClaw](https://github.com/openclaw/openclaw) extension for managing [Surge](https://nssurge.com/) proxy client directly from your chat (e.g., Telegram).
+通过 Telegram 管理 [Surge](https://nssurge.com/) 代理客户端。
 
-It provides both a command-line interface (`/surge`) with an interactive button panel and a natural language skill (`surge-control`) for the AI agent to control Surge for you.
+- 交互面板 — `/surge` 命令打开 Telegram 内联按钮面板，管理策略组和出站模式
+- 自然语言控制 — 通过 `surge-control` Skill，用自然语言让 AI 代理操控 Surge
+- 诊断工具 — 测试策略组连通性、刷新 DNS、重载配置
 
-## Features
+## 快速开始
 
-- **Interactive Panel**: Manage policy groups and outbound modes via Telegram inline buttons.
-- **Policy Group Management**: Switch nodes for any policy group.
-- **Outbound Mode Control**: Switch between Direct, Rule, and Global Proxy modes.
-- **Natural Language Control**: Ask your agent to "switch to a US node" or "turn on global proxy".
-- **Diagnostics**: Test policy groups, flush DNS, and reload profiles.
+按以下顺序执行，共 3 步。
 
-## Installation
-
-Install this extension into your OpenClaw instance:
+### Step 1: 构建插件
 
 ```bash
-openclaw install /path/to/openclaw-surge
-# OR if published to a registry
-# openclaw install openclaw-surge
+cd surge
+npm install
+npm run build
 ```
 
-## Configuration
+### Step 2: 安装到 OpenClaw
 
-Add the following to your OpenClaw `config.yaml` under `plugins`:
-
-```yaml
-plugins:
-  openclaw-surge:
-    enabled: true
-    config:
-      # Surge HTTP API URL (default: https://127.0.0.1:6171)
-      apiUrl: "https://127.0.0.1:6171"
-      # Surge API Key (X-Key header)
-      apiKey: "your-surge-api-key"
-      # Optional: Specific groups to show on the main dashboard
-      # coreGroups: ["Proxy", "Streaming", "OpenAI"]
+```bash
+openclaw plugins install -l /absolute/path/to/surge
 ```
 
-> **Note**: You must enable HTTP API in Surge settings (Preferences > General > HTTP API). Ensure you set a strong password (API Key) and allow access from the machine running OpenClaw.
+> 路径必须是绝对路径，指向 `surge/` 目录根。
 
-## Usage
+### Step 3: 配置插件
 
-### Interactive Command
+在 OpenClaw 插件设置中配置 `Surge Manager`，配置内容如下：
 
-Simply type `/surge` in your chat to open the interactive dashboard.
-- **Mode**: Toggle between Direct, Rule, and Proxy.
-- **Groups**: Click a policy group to see available nodes and select one.
+```json
+{
+  "apiUrl": "https://127.0.0.1:6171",
+  "apiKey": "your-surge-api-key",
+  "coreGroups": ["Proxy", "Streaming", "OpenAI"]
+}
+```
 
-### Subcommands
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `apiUrl` | 否 | Surge HTTP API 地址，默认 `https://127.0.0.1:6171` |
+| `apiKey` | 是 | Surge HTTP API 密钥（`X-Key` 请求头） |
+| `coreGroups` | 否 | 主面板显示的策略组列表，留空则自动检测 |
 
-You can also use specific subcommands for quick actions:
+> 需要在 Surge 中开启 HTTP API：偏好设置 > 通用 > HTTP API，并设置密码。
 
-- `/surge status` - Show current outbound mode.
-- `/surge mode [direct|rule|proxy]` - Get or set outbound mode.
-- `/surge select <Group Name> <Node Name>` - Switch a policy group to a specific node.
-- `/surge groups` - List visible policy groups.
-- `/surge test <Group Name>` - Test connectivity for a group.
-- `/surge flush` - Flush DNS cache.
-- `/surge reload` - Reload Surge profile.
+## 使用方式
 
-### Natural Language (Agent Skill)
+### 交互命令
 
-This extension includes the `surge-control` skill. You can ask your agent:
+在对话中输入 `/surge` 打开交互面板：
 
-- "Switch the Proxy group to a Hong Kong node."
-- "Turn on global proxy mode."
-- "Test the OpenAI policy group."
-- "Flush DNS."
+- **模式切换** — Direct / Rule / Global Proxy
+- **策略组** — 点击策略组查看可用节点并切换
 
-The agent will understand your intent and use the Surge API to execute the command.
+### 子命令
 
-## Requirements
+| 命令 | 说明 |
+|------|------|
+| `/surge status` | 查看当前出站模式 |
+| `/surge mode [direct\|rule\|proxy]` | 获取或设置出站模式 |
+| `/surge select <组名> <节点名>` | 切换策略组节点 |
+| `/surge groups` | 列出可见策略组 |
+| `/surge test <组名>` | 测试策略组连通性 |
+| `/surge flush` | 刷新 DNS 缓存 |
+| `/surge reload` | 重载 Surge 配置 |
+
+### 自然语言（Agent Skill）
+
+插件包含 `surge-control` Skill，可以直接用自然语言控制：
+
+- "把 Proxy 组切换到香港节点"
+- "开启全局代理模式"
+- "测试 OpenAI 策略组"
+- "刷新 DNS"
+
+## 项目结构
+
+```
+surge/
+  src/
+    index.ts            — 插件入口，注册 /surge 命令
+    commands.ts         — 子命令处理逻辑
+    surge-api.ts        — Surge HTTP API 客户端
+    tg-api.ts           — Telegram 内联按钮交互
+    formatter.ts        — 输出格式化 + 按钮构建
+    matcher.ts          — 策略组 / 节点名模糊匹配
+    cache.ts            — 策略组缓存
+  skills/
+    surge-control/
+      SKILL.md          — AI 自然语言控制 Skill
+  openclaw.plugin.json  — 插件清单 + 配置 Schema
+  package.json
+  tsconfig.json
+```
+
+## 前置要求
 
 - OpenClaw >= 2026.1.0
-- Surge for Mac (with HTTP API enabled)
-- Network access from OpenClaw to Surge (default localhost:6171)
-
-## License
-
-MIT
+- Surge for Mac（需开启 HTTP API）
+- OpenClaw 到 Surge 的网络可达（默认 localhost:6171）
