@@ -2,7 +2,7 @@
 
 import type { FXPairRate, FXSummary } from "./types.js";
 
-const BASE_URL = "https://api.frankfurter.app";
+const DEFAULT_FX_API_URL = "https://api.frankfurter.app";
 const REQUEST_TIMEOUT = 5000;
 const LOOKBACK_DAYS = 7;
 
@@ -41,11 +41,11 @@ function parsePair(pair: string): ParsedPair {
   }
   return { base: parts[0], quote: parts[1] };
 }
-async function fetchTimeSeries(base: string, quotes: string[]): Promise<TimeSeriesResponse> {
+async function fetchTimeSeries(base: string, quotes: string[], baseUrl: string): Promise<TimeSeriesResponse> {
   const end = new Date();
   const start = new Date(end);
   start.setDate(start.getDate() - LOOKBACK_DAYS);
-  const url = `${BASE_URL}/${formatDate(start)}..${formatDate(end)}?base=${base}&symbols=${quotes.join(",")}`;
+  const url = `${baseUrl}/${formatDate(start)}..${formatDate(end)}?base=${base}&symbols=${quotes.join(",")}`;
   return fetchJson<TimeSeriesResponse>(url);
 }
 function extractLastTwoTradingDays(
@@ -64,7 +64,8 @@ function extractLastTwoTradingDays(
     previousRates: rates[previousDate]!,
   };
 }
-export async function fetchFXSummary(pairs: string[]): Promise<FXSummary> {
+export async function fetchFXSummary(pairs: string[], fxApiUrl?: string): Promise<FXSummary> {
+  const baseUrl = fxApiUrl || DEFAULT_FX_API_URL;
   const parsed = pairs.map(parsePair);
   const grouped = new Map<string, string[]>();
   for (const { base, quote } of parsed) {
@@ -79,7 +80,7 @@ export async function fetchFXSummary(pairs: string[]): Promise<FXSummary> {
   let latestCurrentDate = "";
   let latestPreviousDate = "";
   const requests = Array.from(grouped.entries()).map(async ([base, quotes]) => {
-    const data = await fetchTimeSeries(base, quotes);
+    const data = await fetchTimeSeries(base, quotes, baseUrl);
     const { currentDate, previousDate, currentRates, previousRates } = extractLastTwoTradingDays(data.rates);
     if (currentDate > latestCurrentDate) latestCurrentDate = currentDate;
     if (previousDate > latestPreviousDate) latestPreviousDate = previousDate;

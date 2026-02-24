@@ -58,7 +58,7 @@ export default function register(api: any) {
 
       if (cfg.fx?.pairs?.length) {
         tasks.push(
-          fetchFXSummary(cfg.fx.pairs)
+          fetchFXSummary(cfg.fx.pairs, cfg.fxApiUrl)
             .then((f) => { fx = f; })
             .catch((e) => { errors.push(`汇率: ${errorMessage(e)}`); }),
         );

@@ -15,6 +15,7 @@ export type PluginConfig = {
   fx: {
     pairs: string[];
   };
+  fxApiUrl?: string;
 };
 
 
