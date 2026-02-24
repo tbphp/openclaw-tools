@@ -39,8 +39,7 @@
               }
             }
           }
-        },
-        "required": ["locations"]
+        }
       },
       "fx": {
         "type": "object",
@@ -54,8 +53,7 @@
               "pattern": "^[A-Z]{3}/[A-Z]{3}$"
             }
           }
-        },
-        "required": ["pairs"]
+        }
       }
     }
   },
