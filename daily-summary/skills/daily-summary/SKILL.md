@@ -10,24 +10,15 @@ description: Format daily weather forecasts and FX rate summaries into Chinese n
 
 ## 天气部分
 
-对每个 `weather[]` 条目，输出今日天气（forecasts[0]）：
+对每个 `weather[]` 条目，输出今日天气（`forecast` 字段）：
 
 ```
 🌤 {name} 今日天气
-
 {weatherDesc} | {tempMin}°C ~ {tempMax}°C
 降水概率: {precipProbability}%
+空气质量: AQI {aqi} | PM2.5 {pm25} | PM10 {pm10}
 ```
-
-如果有明后天数据（forecasts[1]、forecasts[2]），追加：
-
-```
-📅 未来两天:
-  明天: {weatherDesc} {tempMin}°C ~ {tempMax}°C
-  后天: {weatherDesc} {tempMin}°C ~ {tempMax}°C
-```
-
-多个地点之间空一行。
+如果 `airQuality` 字段缺失，省略空气质量行。多个地点之间空一行。
 
 ## 汇率部分
 

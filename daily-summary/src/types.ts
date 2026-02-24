@@ -35,11 +35,18 @@ export type DailyForecast = {
   precipProbability: number;
 };
 
+export type AirQuality = {
+  aqi: number;
+  pm25: number;
+  pm10: number;
+};
+
 export type LocationWeather = {
   name: string;
   country: string;
   timezone: string;
-  forecasts: DailyForecast[];
+  forecast: DailyForecast;
+  airQuality?: AirQuality;
 };
 
 

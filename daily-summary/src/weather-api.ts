@@ -1,9 +1,10 @@
 // weather-api.ts — Open-Meteo geocoding and forecast client
 
-import type { WeatherLocationConfig, GeocodingResult, DailyForecast, LocationWeather } from "./types.js";
+import type { WeatherLocationConfig, GeocodingResult, DailyForecast, AirQuality, LocationWeather } from "./types.js";
 
 const GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search";
 const FORECAST_URL = "https://api.open-meteo.com/v1/forecast";
+const AIR_QUALITY_URL = "https://air-quality-api.open-meteo.com/v1/air-quality";
 const REQUEST_TIMEOUT = 5000;
 
 const DAILY_FIELDS = [
@@ -80,20 +81,38 @@ type ForecastResponse = {
   };
 };
 
-function parseDailyForecasts(daily: ForecastResponse["daily"]): DailyForecast[] {
-  return daily.time.map((date, i) => ({
-    date,
-    tempMax: daily.temperature_2m_max[i]!,
-    tempMin: daily.temperature_2m_min[i]!,
-    weatherCode: daily.weather_code[i]!,
-    weatherDesc: weatherDescription(daily.weather_code[i]!),
-    precipProbability: daily.precipitation_probability_max[i]!,
-  }));
+function parseDailyForecast(daily: ForecastResponse["daily"]): DailyForecast {
+  return {
+    date: daily.time[0]!,
+    tempMax: daily.temperature_2m_max[0]!,
+    tempMin: daily.temperature_2m_min[0]!,
+    weatherCode: daily.weather_code[0]!,
+    weatherDesc: weatherDescription(daily.weather_code[0]!),
+    precipProbability: daily.precipitation_probability_max[0]!,
+  };
 }
 
 async function fetchForecast(lat: number, lon: number): Promise<ForecastResponse> {
-  const url = `${FORECAST_URL}?latitude=${lat}&longitude=${lon}&daily=${DAILY_FIELDS}&timezone=auto&forecast_days=3`;
+  const url = `${FORECAST_URL}?latitude=${lat}&longitude=${lon}&daily=${DAILY_FIELDS}&timezone=auto&forecast_days=1`;
   return fetchJson<ForecastResponse>(url);
+}
+
+type AirQualityResponse = {
+  current: {
+    european_aqi: number;
+    pm2_5: number;
+    pm10: number;
+  };
+};
+
+async function fetchAirQuality(lat: number, lon: number): Promise<AirQuality> {
+  const url = `${AIR_QUALITY_URL}?latitude=${lat}&longitude=${lon}&current=european_aqi,pm2_5,pm10`;
+  const data = await fetchJson<AirQualityResponse>(url);
+  return {
+    aqi: data.current.european_aqi,
+    pm25: data.current.pm2_5,
+    pm10: data.current.pm10,
+  };
 }
 
 export async function fetchLocationWeather(loc: WeatherLocationConfig): Promise<LocationWeather> {
@@ -118,13 +137,17 @@ export async function fetchLocationWeather(loc: WeatherLocationConfig): Promise<
     throw new Error("天气地点配置无效: 需要 city 或 lat/lon");
   }
 
-  const forecast = await fetchForecast(lat, lon);
+  const [forecast, airQuality] = await Promise.all([
+    fetchForecast(lat, lon),
+    fetchAirQuality(lat, lon).catch(() => undefined),
+  ]);
   if (!timezone) timezone = forecast.timezone;
   return {
     name,
     country,
     timezone,
-    forecasts: parseDailyForecasts(forecast.daily),
+    forecast: parseDailyForecast(forecast.daily),
+    airQuality,
   };
 }
 
