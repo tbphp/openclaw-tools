@@ -3,6 +3,7 @@
   "name": "Daily Summary",
   "version": "0.1.0",
   "description": "Daily weather forecast and FX rate summary with Telegram push",
+  "skills": ["skills"],
   "author": "OpenClaw",
   "license": "MIT",
   "configSchema": {
