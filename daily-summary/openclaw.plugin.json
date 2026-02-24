@@ -1,0 +1,72 @@
+{
+  "id": "daily-summary",
+  "name": "Daily Summary",
+  "version": "0.1.0",
+  "description": "Daily weather forecast and FX rate summary with Telegram push",
+  "author": "OpenClaw",
+  "license": "MIT",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "weather": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "locations": {
+            "type": "array",
+            "description": "Weather locations to fetch forecasts for",
+            "items": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string",
+                  "description": "City name (auto-geocoded via Open-Meteo)"
+                },
+                "lat": {
+                  "type": "number",
+                  "description": "Latitude (WGS84)"
+                },
+                "lon": {
+                  "type": "number",
+                  "description": "Longitude (WGS84)"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Display name (required when using lat/lon)"
+                }
+              }
+            }
+          }
+        },
+        "required": ["locations"]
+      },
+      "fx": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pairs": {
+            "type": "array",
+            "description": "Currency pairs to track, e.g. [\"USD/CNY\", \"JPY/CNY\"]",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}/[A-Z]{3}$"
+            }
+          }
+        },
+        "required": ["pairs"]
+      }
+    },
+    "required": ["weather", "fx"]
+  },
+  "uiHints": {
+    "weather.locations": {
+      "label": "天气地点",
+      "help": "支持城市名 (city) 或经纬度 (lat/lon + name)"
+    },
+    "fx.pairs": {
+      "label": "汇率货币对",
+      "help": "格式: BASE/QUOTE，如 USD/CNY"
+    }
+  }
+}
