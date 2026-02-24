@@ -1,5 +1,5 @@
 {
-  "name": "openclaw-daily-summary",
+  "name": "daily-summary",
   "version": "0.1.0",
   "description": "Daily summary plugin for OpenClaw — weather forecast and FX rates via Telegram",
   "type": "module",
