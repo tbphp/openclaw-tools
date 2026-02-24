@@ -56,8 +56,7 @@
         },
         "required": ["pairs"]
       }
-    },
-    "required": ["weather", "fx"]
+    }
   },
   "uiHints": {
     "weather.locations": {
