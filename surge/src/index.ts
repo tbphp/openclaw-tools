@@ -53,7 +53,7 @@ function getSurgeConfig(pluginConfig?: Record<string, unknown>): SurgeConfig {
   const cfg = (pluginConfig ?? {}) as PluginConfig;
   return {
     apiUrl: cfg.apiUrl || "https://127.0.0.1:6171",
-    apiKey: cfg.apiKey || "1236",
+    apiKey: cfg.apiKey || "123456",
   };
 }
 

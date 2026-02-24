@@ -9,7 +9,7 @@ disable-model-invocation: false
 
 ## API 信息
 - 地址: `https://127.0.0.1:6171`
-- 认证: Header `X-Key: 1236`
+- 认证: Header `X-Key: 123456`
 - TLS: 自签名证书，curl 需要 `-k`
 
 ## 核心原则
@@ -23,7 +23,7 @@ disable-model-invocation: false
 
 ### 1. 查询所有策略组与可选项
 ```bash
-curl -sk "https://127.0.0.1:6171/v1/policy_groups" -H "X-Key: 1236"
+curl -sk "https://127.0.0.1:6171/v1/policy_groups" -H "X-Key: 123456"
 ```
 
 ### 2. 切换策略组节点
@@ -31,22 +31,22 @@ curl -sk "https://127.0.0.1:6171/v1/policy_groups" -H "X-Key: 1236"
 2. 调用切换：
 ```bash
 curl -sk -X POST "https://127.0.0.1:6171/v1/policy_groups/select" \
-  -H "X-Key: 1236" \
+  -H "X-Key: 123456" \
   -H "Content-Type: application/json" \
   -d '{"group_name":"<精确组名>","policy":"<精确节点名>"}'
 ```
 
 ### 3. 查询特定策略组当前选择
 ```bash
-curl -sk "https://127.0.0.1:6171/v1/policy_groups/select?group_name=<精确组名>" -H "X-Key: 1236"
+curl -sk "https://127.0.0.1:6171/v1/policy_groups/select?group_name=<精确组名>" -H "X-Key: 123456"
 ```
 
 ## 其他接口
-- 获取出站模式：`curl -sk "https://127.0.0.1:6171/v1/outbound" -H "X-Key: 1236"`
-- 设置出站模式：`curl -sk -X POST "https://127.0.0.1:6171/v1/outbound" -H "X-Key: 1236" -d '{"mode":"rule"}'` (可用模式: direct, proxy, rule)
-- 重载配置：`curl -sk -X POST "https://127.0.0.1:6171/v1/profiles/reload" -H "X-Key: 1236"`
-- 刷新 DNS：`curl -sk -X POST "https://127.0.0.1:6171/v1/dns/flush" -H "X-Key: 1236"`
-- 策略组测速：`curl -sk -X POST "https://127.0.0.1:6171/v1/policy_groups/test" -H "X-Key: 1236" -d '{"group_name":"<组名>"}'`
+- 获取出站模式：`curl -sk "https://127.0.0.1:6171/v1/outbound" -H "X-Key: 123456"`
+- 设置出站模式：`curl -sk -X POST "https://127.0.0.1:6171/v1/outbound" -H "X-Key: 123456" -d '{"mode":"rule"}'` (可用模式: direct, proxy, rule)
+- 重载配置：`curl -sk -X POST "https://127.0.0.1:6171/v1/profiles/reload" -H "X-Key: 123456"`
+- 刷新 DNS：`curl -sk -X POST "https://127.0.0.1:6171/v1/dns/flush" -H "X-Key: 123456"`
+- 策略组测速：`curl -sk -X POST "https://127.0.0.1:6171/v1/policy_groups/test" -H "X-Key: 123456" -d '{"group_name":"<组名>"}'`
 
 ## 禁止事项
 - **禁止**不加双引号直接在 URL 中使用特殊字符。
