@@ -1,0 +1,46 @@
+{
+  "name": "openclaw-surge",
+  "version": "0.1.0",
+  "description": "Surge proxy manager plugin for OpenClaw — manage policy groups, outbound mode, and more via Telegram",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "skills",
+    "openclaw.plugin.json"
+  ],
+  "openclaw": {
+    "extensions": [
+      "./dist/index.js"
+    ]
+  },
+  "scripts": {
+    "build": "tsc --skipLibCheck",
+    "clean": "rm -rf dist",
+    "rebuild": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "surge",
+    "proxy",
+    "telegram"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.1.0"
+  }
+}

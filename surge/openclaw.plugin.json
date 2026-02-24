@@ -1,0 +1,29 @@
+{
+  "id": "openclaw-surge",
+  "name": "Surge Manager",
+  "description": "Manage Surge proxy via Telegram commands and inline buttons",
+  "skills": ["skills"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "apiUrl": {
+        "type": "string",
+        "title": "Surge HTTP API URL",
+        "description": "Surge HTTP API endpoint (e.g. https://127.0.0.1:6171)",
+        "default": "https://127.0.0.1:6171"
+      },
+      "apiKey": {
+        "type": "string",
+        "title": "Surge API Key",
+        "description": "X-Key header value for Surge HTTP API authentication"
+      },
+      "coreGroups": {
+        "type": "array",
+        "title": "Core policy groups",
+        "description": "Policy groups shown on the main dashboard panel. Leave empty to auto-detect.",
+        "items": { "type": "string" }
+      }
+    }
+  }
+}
