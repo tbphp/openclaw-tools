@@ -1,0 +1,54 @@
+{
+  "services": {
+    "cliproxyapi": {
+      "actions": {
+        "health": "docker compose ps",
+        "restart": "docker compose restart",
+        "status": "docker compose ps",
+        "update": "docker compose pull && docker compose up -d --remove-orphans"
+      },
+      "aliases": [
+        "cli-proxy-api",
+        "cpa",
+        "proxyapi"
+      ],
+      "display_name": "CLIProxyAPI",
+      "path": "~/www/CLIProxyAPI",
+      "runtime": "docker_compose",
+      "shell_init": ":"
+    },
+    "lobehub": {
+      "actions": {
+        "health": "docker compose ps",
+        "restart": "docker compose restart",
+        "status": "docker compose ps",
+        "update": "docker compose pull && docker compose up -d --remove-orphans"
+      },
+      "aliases": [
+        "lobe",
+        "lobechat",
+        "lobehub"
+      ],
+      "display_name": "LobeHub",
+      "path": "~/www/lobehub",
+      "runtime": "docker_compose",
+      "shell_init": ":"
+    },
+    "new-api": {
+      "actions": {
+        "health": "docker compose ps",
+        "restart": "docker compose restart",
+        "status": "docker compose ps",
+        "update": "docker compose pull && docker compose up -d --remove-orphans"
+      },
+      "aliases": [
+        "new-api",
+        "newapi"
+      ],
+      "display_name": "New-API",
+      "path": "~/www/ai/new-api",
+      "runtime": "docker_compose",
+      "shell_init": ":"
+    }
+  }
+}
