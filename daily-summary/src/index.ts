@@ -25,9 +25,7 @@ export default function register(api: any) {
   const pluginApi = api as OpenClawPluginApi;
   const cfg = (pluginApi.pluginConfig ?? {}) as PluginConfig;
 
-  if (!cfg.weather?.locations?.length && !cfg.fx?.pairs?.length) {
-    throw new Error("daily-summary: 未配置 weather.locations 或 fx.pairs");
-  }
+  const hasConfig = !!(cfg.weather?.locations?.length || cfg.fx?.pairs?.length);
 
   pluginApi.registerTool({
     name: "daily_summary_generate",
@@ -35,6 +33,11 @@ export default function register(api: any) {
     description: "Fetch today's weather forecast and FX rates. Returns structured JSON for AI to format.",
     parameters: {},
     execute: async () => {
+      if (!hasConfig) {
+        return {
+          content: [{ type: "text" as const, text: "❌ 未配置 weather.locations 或 fx.pairs，请在插件设置中完成配置后重试。" }],
+        };
+      }
       const errors: string[] = [];
       let weather: DailySummaryResult["weather"] = [];
       let fx: DailySummaryResult["fx"] = {
