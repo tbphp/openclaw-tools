@@ -9,8 +9,5 @@
 | [surge](./surge) | Surge 代理管理 |
 | [daily-summary](./daily-summary) | 每日天气预报 + 汇率行情推送 |
 | [service-updater](./service-updater) | 自托管服务部署管理（更新/重启/状态查询） |
-| [daily-hotspot-medical](./daily-hotspot-medical) | 医疗热点日报 Skill |
-| [hotspot-alert-medical](./hotspot-alert-medical) | 医疗热点快扫预警 Skill |
-| [topic-deepen-medical](./topic-deepen-medical) | 医疗热点选题深挖 Skill |
 
 每个工具独立构建，详见各自目录下的 README。
